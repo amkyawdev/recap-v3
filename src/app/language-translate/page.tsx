@@ -2,7 +2,7 @@
 
 
 import { motion } from 'framer-motion';
-import PageTransition from '@/components/ui/PageTransition';
+
 import MobileButton from '@/components/ui/MobileButton';
 import SideMenu from '@/components/ui/SideMenu';
 
@@ -14,7 +14,7 @@ export default function LanguageTranslatePage() {
   };
 
   return (
-    <PageTransition>
+    
       <div className="min-h-screen bg-gray-50">
         <SideMenu />
         <MobileButton />
@@ -35,6 +35,6 @@ export default function LanguageTranslatePage() {
           </motion.button>
         </div>
       </div>
-    </PageTransition>
+    
   );
 }

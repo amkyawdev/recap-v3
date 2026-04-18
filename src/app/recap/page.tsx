@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import PageTransition from '@/components/ui/PageTransition';
+
 import MobileButton from '@/components/ui/MobileButton';
 import SideMenu from '@/components/ui/SideMenu';
 import SubtitleEditor from '@/components/subtitle/SubtitleEditor';
@@ -66,7 +66,7 @@ export default function RecapPage() {
   };
 
   return (
-    <PageTransition>
+    
       <div className="min-h-screen bg-gray-50">
         <SideMenu />
         <MobileButton />
@@ -116,6 +116,6 @@ export default function RecapPage() {
           />
         </div>
       </div>
-    </PageTransition>
+    
   );
 }

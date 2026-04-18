@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import PageTransition from '@/components/ui/PageTransition';
+
 import MobileButton from '@/components/ui/MobileButton';
 import SideMenu from '@/components/ui/SideMenu';
 import VideoUploader from '@/components/video/VideoUploader';
@@ -98,7 +98,7 @@ export default function PreviewMoviePage() {
   };
 
   return (
-    <PageTransition>
+    
       <div className="min-h-screen bg-gray-50">
         <SideMenu />
         <MobileButton />
@@ -197,6 +197,6 @@ export default function PreviewMoviePage() {
           )}
         </div>
       </div>
-    </PageTransition>
+    
   );
 }

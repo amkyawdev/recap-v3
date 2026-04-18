@@ -11,18 +11,21 @@ export default function MobileButton({ onClick, isOpen = false }: MobileButtonPr
   return (
     <button
       onClick={onClick}
-      className="fixed top-4 right-4 z-50 w-10 h-10 flex items-center justify-center bg-strawberry-500 text-white rounded-full shadow-lg"
+      className="fixed bottom-4 right-4 z-50 w-14 h-14 flex items-center justify-center bg-strawberry-500 text-white rounded-full shadow-lg md:hidden"
       style={{
-        boxShadow: '0 4px 15px rgba(233, 0, 77, 0.3)',
+        boxShadow: '0 4px 20px rgba(233, 0, 77, 0.4)',
       }}
     >
       {isOpen ? (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       ) : (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       )}
     </button>
