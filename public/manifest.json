@@ -1,0 +1,21 @@
+{
+  "name": "Recap App",
+  "short_name": "Recap",
+  "description": "Subtitle editing and video processing application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e9004d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "productivity", "video"],
+  "lang": "my",
+  "dir": "ltr"
+}
