@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+
 import { motion } from 'framer-motion';
 import PageTransition from '@/components/ui/PageTransition';
 import MagicMenu from '@/components/ui/MagicMenu';
