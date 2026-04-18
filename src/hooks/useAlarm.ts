@@ -10,7 +10,6 @@ interface AlarmContextType {
 }
 
 const AlarmContext = createContext<AlarmContextType | undefined>(undefined);
-const AlarmContextProvider = AlarmContext.Provider;
 
 export function useAlarmContext() {
   const context = useContext(AlarmContext);
@@ -40,9 +39,10 @@ export function AlarmProvider({ children }: AlarmProviderProps) {
     setAlarms((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (
-    <AlarmContextProvider value={{ alarms, addAlarm, removeAlarm }}>
+    <AlarmContext.Provider value={{ alarms, addAlarm, removeAlarm } as any}>
       {children}
-    </AlarmContextProvider>
+    </AlarmContext.Provider>
   );
 }
