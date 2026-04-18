@@ -1,9 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
 import './globals.css';
 import ServiceWorkerRegistration from '@/components/ui/ServiceWorkerRegistration';
 import { AlarmProvider } from '@/components/ui/AlarmToast';
@@ -12,32 +9,7 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-const pageVariants = {
-  initial: {
-    opacity: 0,
-    y: 20,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: 'easeInOut',
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: -20,
-    transition: {
-      duration: 0.3,
-      ease: 'easeInOut',
-    },
-  },
-};
-
 export default function RootLayout({ children }: RootLayoutProps) {
-  const pathname = usePathname();
-
   return (
     <html lang="my">
       <head>
@@ -59,17 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body>
         <AlarmProvider>
           <ServiceWorkerRegistration />
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              variants={pageVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          {children}
         </AlarmProvider>
       </body>
     </html>

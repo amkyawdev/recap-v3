@@ -6,13 +6,14 @@ import PageTransition from '@/components/ui/PageTransition';
 import AnimatedText from '@/components/ui/AnimatedText';
 import MagicMenu from '@/components/ui/MagicMenu';
 import SideMenu from '@/components/ui/SideMenu';
+import MobileButton from '@/components/ui/MobileButton';
 
 export default function HomePage() {
   return (
     <PageTransition>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <SideMenu />
-        <MagicMenu />
+        <MobileButton />
 
         <div className="flex flex-col items-center justify-center min-h-screen py-20">
           <motion.div

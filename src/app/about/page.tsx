@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import PageTransition from '@/components/ui/PageTransition';
-import MagicMenu from '@/components/ui/MagicMenu';
+import MobileButton from '@/components/ui/MobileButton';
 import SideMenu from '@/components/ui/SideMenu';
 
 export default function AboutPage() {
@@ -10,7 +10,7 @@ export default function AboutPage() {
     <PageTransition>
       <div className="min-h-screen bg-gray-50">
         <SideMenu />
-        <MagicMenu />
+        <MobileButton />
 
         <div className="ml-12 p-4 md:p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">About Recap App</h1>
