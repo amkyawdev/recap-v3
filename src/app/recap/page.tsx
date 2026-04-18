@@ -193,7 +193,7 @@ export default function RecapPage() {
             {videoUrl && lines.length > 0 && (
               <RewrapMuxer
                 videoUrl={videoUrl}
-                srtContent={lines.map(l => `${l.id}\n${l.startTime} --> ${l.endTime}\n${l.text}\n`).join('\n')}
+                srtContent={lines.map(l => `${l.id}\n${l.startTime} --> ${l.endTime}\n${l.text}`).join('\n\n')}
                 onComplete={(url) => setMuxedVideoUrl(url)}
               />
             )}

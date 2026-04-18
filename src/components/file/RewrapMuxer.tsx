@@ -4,31 +4,14 @@ import { useState } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { useAlarm } from '@/components/ui/AlarmToast';
-import { SubtitleStyle } from '@/types/subtitle';
-
-interface LogoStyle {
-  size: number;
-  position: string;
-  opacity: number;
-}
 
 interface RewrapMuxerProps {
   videoUrl: string;
   srtContent?: string;
-  logoUrl?: string;
-  logoStyle?: LogoStyle;
-  subtitleStyle?: SubtitleStyle;
   onComplete: (outputUrl: string) => void;
 }
 
-export default function RewrapMuxer({ 
-  videoUrl, 
-  srtContent = '', 
-  logoUrl = '', 
-  logoStyle = { size: 15, position: 'top-right', opacity: 100 },
-  subtitleStyle,
-  onComplete 
-}: RewrapMuxerProps) {
+export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: RewrapMuxerProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const { addAlarm } = useAlarm();
@@ -60,36 +43,10 @@ export default function RewrapMuxer({
       if (srtContent) {
         const encoder = new TextEncoder();
         await ffmpeg.writeFile('subtitles.srt', encoder.encode(srtContent));
-        args.push('-i', 'subtitles.srt', '-c:s', 'srt', '-metadata:s:s', 'language=eng');
+        args.push('-i', 'subtitles.srt', '-c:s', 'srt', '-metadata:s:s', 'language=eng', '-c:v', 'copy', '-c:a', 'copy', 'output.mp4');
+      } else {
+        args.push('-c:v', 'copy', '-c:a', 'copy', 'output.mp4');
       }
-
-      // Add logo if provided
-      if (logoUrl) {
-        const logoResponse = await fetch(logoUrl);
-        const logoBlob = await logoResponse.blob();
-        const ext = logoUrl.split('.').pop()?.toLowerCase() || 'png';
-        await ffmpeg.writeFile(`logo.${ext}`, await fetchFile(logoBlob));
-        
-        // Position filter
-        let positionFilter = '';
-        const posMap: Record<string, string> = {
-          'top-left': '10:10',
-          'top-right': 'main_w-overlay_w-10:10',
-          'bottom-left': '10:main_h-overlay_h-10',
-          'bottom-right': 'main_w-overlay_w-10:main_h-overlay_h-10',
-        };
-        const pos = posMap[logoStyle.position] || 'main_w-overlay_w-10:10';
-        
-        args.push(
-          '-i', `logo.${ext}`,
-          '-filter_complex', `[1:v]format=rgba,colorchannelmixer=aa=${logoStyle.opacity/100}[logo];[0:v][logo]overlay=${pos}`,
-          '-c:v', 'libx264', '-preset', 'fast'
-        );
-      } else if (srtContent) {
-        args.push('-c:v', 'copy');
-      }
-
-      args.push('-c:a', 'copy', 'output.mp4');
 
       await ffmpeg.exec(args);
 
@@ -109,12 +66,10 @@ export default function RewrapMuxer({
     }
   };
 
-  const canCombine = videoUrl && (srtContent || logoUrl);
-
   return (
     <button
       onClick={muxVideo}
-      disabled={loading || !canCombine}
+      disabled={loading || !videoUrl || !srtContent}
       className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
     >
       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
