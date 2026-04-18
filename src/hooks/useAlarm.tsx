@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode, useCallback, ComponentType } from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback, ComponentType, createElement } from 'react';
 import { AlarmMessage, AlarmType } from '@/types/subtitle';
 
 interface AlarmContextType {
@@ -43,5 +43,5 @@ export function AlarmProvider({ children }: AlarmProviderProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Provider: ComponentType<any> = AlarmContextAny.Provider as any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return React.createElement(Provider, { value: { alarms, addAlarm, removeAlarm } as any }, children);
+  return createElement(Provider, { value: { alarms, addAlarm, removeAlarm } as any }, children);
 }
