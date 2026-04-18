@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap');
+
+:root {
+  --strawberry-50: #ffe5ec;
+  --strawberry-100: #ffb8c9;
+  --strawberry-200: #ff8aa6;
+  --strawberry-300: #ff5c83;
+  --strawberry-400: #ff2e60;
+  --strawberry-500: #e9004d;
+  --strawberry-600: #c4003e;
+  --strawberry-700: #a30032;
+  --strawberry-800: #820027;
+  --strawberry-900: #61001b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  font-family: 'Noto Sans Myanmar', 'Pyidaungsu', sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* Myanmar Font Classes */
+.font-pyidaungsu {
+  font-family: 'Pyidaungsu', sans-serif;
+}
+
+.font-noto-myanmar {
+  font-family: 'Noto Sans Myanmar', sans-serif;
+}
+
+.font-masterpiece {
+  font-family: 'Masterpiece', sans-serif;
+}
+
+.font-zawgyi {
+  font-family: 'Zawgyi', sans-serif;
+}
+
+/* Smooth transitions */
+.smooth-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Small button base */
+.btn-sm {
+  @apply px-2 py-1 text-sm rounded;
+}
+
+/* Small icon button */
+.icon-btn-sm {
+  @apply p-1.5 rounded-full hover:bg-gray-100;
+}
+
+/* Mini menu */
+.menu-mini {
+  @apply w-12 hover:w-48;
+}
+
+/* Compact dialog */
+.dialog-compact {
+  @apply w-72 p-3;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
