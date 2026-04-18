@@ -2,28 +2,52 @@ import { SubtitleLine } from '@/types/subtitle';
 
 export function parseSRT(content: string): SubtitleLine[] {
   const lines: SubtitleLine[] = [];
-  const blocks = content.trim().split(/\n\n+/);
-
-  for (const block of blocks) {
-    const parts = block.split('\n');
-    if (parts.length < 3) continue;
-
-    const idLine = parts[0].trim();
-    const timeLine = parts[1].trim();
-    const textLines = parts.slice(2);
-
-    const id = parseInt(idLine, 10) || lines.length + 1;
-    const timeMatch = timeLine.match(
-      /(\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[,\.]\d{3})/
-    );
-
-    if (!timeMatch) continue;
-
-    const startTime = timeMatch[1].replace(',', ',');
-    const endTime = timeMatch[2].replace(',', ',');
-    const text = textLines.join('\n');
-
-    lines.push({ id, startTime, endTime, text });
+  
+  const normalized = content.trim();
+  const allLines = normalized.split('\n');
+  
+  let currentSubtitle: Partial<SubtitleLine> = {};
+  let inSubtitle = false;
+  
+  for (let i = 0; i < allLines.length; i++) {
+    const line = allLines[i].trim();
+    
+    // Skip empty lines
+    if (!line) continue;
+    
+    // Check if this is a subtitle number (just digits)
+    if (/^\d+$/.test(line)) {
+      // Save previous subtitle if exists
+      if (inSubtitle && currentSubtitle.startTime && currentSubtitle.endTime && currentSubtitle.text) {
+        lines.push(currentSubtitle as SubtitleLine);
+      }
+      // Start new subtitle
+      currentSubtitle = { id: parseInt(line, 10) };
+      inSubtitle = true;
+    }
+    // Check if this is a timestamp line
+    else if (line.includes('-->')) {
+      const timeMatch = line.match(
+        /(\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[,\.]\d{3})/
+      );
+      if (timeMatch) {
+        currentSubtitle.startTime = timeMatch[1].replace('.', ',');
+        currentSubtitle.endTime = timeMatch[2].replace('.', ',');
+      }
+    }
+    // Otherwise it's text
+    else {
+      if (!currentSubtitle.text) {
+        currentSubtitle.text = line;
+      } else {
+        currentSubtitle.text += '\n' + line;
+      }
+    }
+  }
+  
+  // Don't forget the last subtitle
+  if (inSubtitle && currentSubtitle.startTime && currentSubtitle.endTime && currentSubtitle.text) {
+    lines.push(currentSubtitle as SubtitleLine);
   }
 
   return lines;
