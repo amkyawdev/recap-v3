@@ -7,7 +7,6 @@ import MobileButton from '@/components/ui/MobileButton';
 import SideMenu from '@/components/ui/SideMenu';
 import SubtitleEditor from '@/components/subtitle/SubtitleEditor';
 import SubtitleDialog from '@/components/subtitle/SubtitleDialog';
-import MultiFileUpload from '@/components/file/MultiFileUpload';
 import RewrapMuxer from '@/components/file/RewrapMuxer';
 import { SubtitleLine, SubtitleStyle } from '@/types/subtitle';
 import { parseSRTFile } from '@/components/subtitle/SrtParser';
@@ -31,8 +30,8 @@ export default function RecapPage() {
   const [videoUrl, setVideoUrl] = useState('');
   const [muxedVideoUrl, setMuxedVideoUrl] = useState('');
 
-  const handleFileUpload = async (files: File[]) => {
-    const file = files[0];
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     const ext = file.name.split('.').pop()?.toLowerCase();
@@ -57,8 +56,8 @@ export default function RecapPage() {
     }
   };
 
-  const handleVideoUpload = (files: File[]) => {
-    const file = files[0];
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setVideoUrl(url);
@@ -79,110 +78,142 @@ export default function RecapPage() {
   };
 
   return (
-    
-      <div className="min-h-screen bg-gray-50">
-        <SideMenu />
-        <MobileButton />
+    <div className="min-h-screen bg-gray-100">
+      <SideMenu />
+      <MobileButton />
 
-        <div className="ml-12 p-4 md:p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Recap - Subtitle Editor</h1>
+      <div className="ml-0 md:ml-16 p-4 md:p-8 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Recap - Subtitle Editor</h1>
+          <p className="text-gray-500 mt-1">Edit subtitles and combine with video</p>
+        </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div>
-              <h2 className="text-lg font-semibold mb-2">Upload Files</h2>
-              <MultiFileUpload onUpload={handleFileUpload} />
-              <p className="text-xs text-gray-500 mt-1">Upload SRT, TXT, or Video files</p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Upload & Actions */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Upload Card */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload Files</h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Subtitle (SRT/TXT)</label>
+                  <input
+                    type="file"
+                    accept=".srt,.txt"
+                    onChange={handleFileUpload}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-strawberry-50 file:text-strawberry-700 hover:file:bg-strawberry-100 cursor-pointer"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Video File</label>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              {/* File Status */}
+              <div className="mt-4 pt-4 border-t">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className={`w-2 h-2 rounded-full ${lines.length > 0 ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+                  <span className="text-gray-600">Subtitles: {lines.length} lines</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm mt-2">
+                  <span className={`w-2 h-2 rounded-full ${videoUrl ? 'bg-blue-500' : 'bg-gray-300'}`}></span>
+                  <span className="text-gray-600">Video: {videoUrl ? 'Loaded' : 'Not loaded'}</span>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <h2 className="text-lg font-semibold mb-2">Actions</h2>
-              <div className="flex flex-wrap gap-2">
+            {/* Actions Card */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions</h2>
+              
+              <div className="space-y-3">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setDialogOpen(true)}
-                  className="px-3 py-1.5 bg-strawberry-500 text-white rounded text-sm"
+                  className="w-full px-4 py-2.5 bg-strawberry-500 text-white rounded-lg font-medium hover:bg-strawberry-600"
                 >
-                  🎨 Style Options
+                  Style Options
                 </motion.button>
+                
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleExport}
                   disabled={lines.length === 0}
-                  className="px-3 py-1.5 bg-gray-700 text-white rounded text-sm disabled:opacity-50"
+                  className="w-full px-4 py-2.5 bg-gray-800 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900"
                 >
-                  💾 Export SRT
+                  Export SRT
                 </motion.button>
-              </div>
-            </div>
-          </div>
 
-          {/* Video Section */}
-          <div className="mt-6 border-t pt-4">
-            <h2 className="text-lg font-semibold mb-2">Video & Mux</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600 mb-2">Current Video: {videoUrl ? 'Loaded' : 'No video'}</p>
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setVideoUrl(URL.createObjectURL(file));
-                    }
-                  }}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-strawberry-50 file:text-strawberry-700 hover:file:bg-strawberry-100"
-                />
-              </div>
-              <div className="flex items-center gap-2">
                 {videoUrl && lines.length > 0 && (
                   <RewrapMuxer
                     videoUrl={videoUrl}
                     srtContent={lines.map(l => `${l.id}\n${l.startTime} --> ${l.endTime}\n${l.text}\n`).join('\n')}
-                    onComplete={(url) => {
-                      setMuxedVideoUrl(url);
-                    }}
+                    onComplete={(url) => setMuxedVideoUrl(url)}
                   />
                 )}
               </div>
             </div>
+          </div>
 
+          {/* Right Column - Editor & Preview */}
+          <div className="lg:col-span-2 space-y-6">
             {/* Video Preview */}
             {(videoUrl || muxedVideoUrl) && (
-              <div className="mt-4">
-                <h3 className="font-semibold mb-2">Video Preview</h3>
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Video Preview</h2>
                 {muxedVideoUrl ? (
                   <div>
-                    <video controls className="w-full max-w-2xl rounded-lg" src={muxedVideoUrl} />
-                    <a
-                      href={muxedVideoUrl}
-                      download="video-with-subtitles.mp4"
-                      className="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                    >
-                      ⬇️ Download Video
-                    </a>
+                    <video controls className="w-full rounded-lg bg-black" src={muxedVideoUrl} />
+                    <div className="mt-4 flex gap-3">
+                      <a
+                        href={muxedVideoUrl}
+                        download="video-with-subtitles.mp4"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download Video
+                      </a>
+                      <button
+                        onClick={() => setMuxedVideoUrl('')}
+                        className="px-4 py-2 text-gray-600 hover:text-gray-900"
+                      >
+                        Clear
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <video controls className="w-full max-w-2xl rounded-lg" src={videoUrl} />
+                  <video controls className="w-full rounded-lg bg-black" src={videoUrl} />
                 )}
               </div>
             )}
-          </div>
 
-          <div className="mt-4">
-            <SubtitleEditor lines={lines} onChange={setLines} />
+            {/* Subtitle Editor */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <SubtitleEditor lines={lines} onChange={setLines} />
+            </div>
           </div>
-
-          <SubtitleDialog
-            isOpen={dialogOpen}
-            onClose={() => setDialogOpen(false)}
-            style={style}
-            onChange={setStyle}
-          />
         </div>
+
+        <SubtitleDialog
+          isOpen={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          style={style}
+          onChange={setStyle}
+        />
       </div>
-    
+    </div>
   );
 }
