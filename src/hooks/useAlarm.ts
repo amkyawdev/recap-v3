@@ -10,6 +10,7 @@ interface AlarmContextType {
 }
 
 const AlarmContext = createContext<AlarmContextType | undefined>(undefined);
+const AlarmContextProvider = AlarmContext.Provider;
 
 export function useAlarmContext() {
   const context = useContext(AlarmContext);
@@ -40,8 +41,8 @@ export function AlarmProvider({ children }: AlarmProviderProps) {
   }, []);
 
   return (
-    <AlarmContext.Provider value={{ alarms, addAlarm, removeAlarm }}>
+    <AlarmContextProvider value={{ alarms, addAlarm, removeAlarm }}>
       {children}
-    </AlarmContext.Provider>
+    </AlarmContextProvider>
   );
 }
