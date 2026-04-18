@@ -40,9 +40,10 @@ export function AlarmProvider({ children }: AlarmProviderProps) {
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Provider = AlarmContext.Provider as any;
   return (
-    <AlarmContext.Provider value={{ alarms, addAlarm, removeAlarm } as any}>
+    <Provider value={{ alarms, addAlarm, removeAlarm }}>
       {children}
-    </AlarmContext.Provider>
+    </Provider>
   );
 }
