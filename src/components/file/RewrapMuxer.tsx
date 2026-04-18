@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { useAlarm } from '@/components/ui/AlarmToast';
@@ -15,11 +15,13 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: R
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const { addAlarm } = useAlarm();
-  const ffmpeg = new FFmpeg();
+  const ffmpegRef = useRef(new FFmpeg());
 
   const muxVideo = async () => {
     setLoading(true);
     setProgress(0);
+
+    const ffmpeg = ffmpegRef.current;
 
     try {
       const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
@@ -39,11 +41,12 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: R
 
       const args: string[] = ['-i', 'input.mp4'];
 
-      // Add SRT if provided
+      // Add SRT if provided - burn subtitles into video to keep original quality
       if (srtContent) {
         const encoder = new TextEncoder();
         await ffmpeg.writeFile('subtitles.srt', encoder.encode(srtContent));
-        args.push('-i', 'subtitles.srt', '-c:s', 'srt', '-metadata:s:s', 'language=eng', '-c:v', 'copy', '-c:a', 'copy', 'output.mp4');
+        // Use subtitles filter to burn into video - keeps original encoding
+        args.push('-vf', 'subtitles=subtitles.srt', '-c:a', 'copy', 'output.mp4');
       } else {
         args.push('-c:v', 'copy', '-c:a', 'copy', 'output.mp4');
       }
