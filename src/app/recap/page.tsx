@@ -213,38 +213,50 @@ export default function RecapPage() {
             <div className="bg-white rounded-xl shadow-sm p-4">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Live Preview</h2>
               
-              {muxedVideoUrl ? (
-                <div>
-                  <video controls className="w-full rounded-lg bg-black" src={muxedVideoUrl} />
-                  <div className="mt-4 flex gap-3">
-                    <a
-                      href={muxedVideoUrl}
-                      download="video-with-subtitles.mp4"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                    >
-                      Download Video
-                    </a>
-                    <button onClick={() => setMuxedVideoUrl('')} className="px-4 py-2 text-gray-600 hover:text-gray-900">
-                      Clear
-                    </button>
-                  </div>
-                </div>
-              ) : videoUrl ? (
-                <div className="relative">
-                  <video
-                    ref={videoRef}
-                    controls
-                    className="w-full rounded-lg bg-black"
-                    src={videoUrl}
-                    onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-                  />
-                  {currentSubtitle && (
-                    <div style={getSubtitleStyle()} className="px-3 py-1">
-                      {currentSubtitle}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Original Video with Live Subtitles */}
+                {videoUrl && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">Original</h3>
+                    <div className="relative">
+                      <video
+                        ref={videoRef}
+                        controls
+                        className="w-full rounded-lg bg-black"
+                        src={videoUrl}
+                        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+                      />
+                      {currentSubtitle && (
+                        <div style={getSubtitleStyle()} className="px-3 py-1">
+                          {currentSubtitle}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ) : (
+                  </div>
+                )}
+
+                {/* Exported Video with Burned Subtitles */}
+                {muxedVideoUrl && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">With Subtitles</h3>
+                    <video controls className="w-full rounded-lg bg-black" src={muxedVideoUrl} />
+                    <div className="mt-3 flex gap-2">
+                      <a
+                        href={muxedVideoUrl}
+                        download="video-with-subtitles.mp4"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700"
+                      >
+                        Download
+                      </a>
+                      <button onClick={() => setMuxedVideoUrl('')} className="px-3 py-1.5 text-gray-600 hover:text-gray-900 text-sm">
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {!videoUrl && !muxedVideoUrl && (
                 <div className="flex items-center justify-center h-64 bg-gray-100 rounded-lg">
                   <p className="text-gray-500">Upload a video to see live preview</p>
                 </div>
