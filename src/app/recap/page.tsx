@@ -38,9 +38,14 @@ export default function RecapPage() {
 
     const ext = file.name.split('.').pop()?.toLowerCase();
     if (ext === 'srt') {
-      const parsed = await parseSRTFile(file);
-      setLines(parsed);
-      setFilename(file.name);
+      try {
+        const parsed = await parseSRTFile(file);
+        console.log('Parsed SRT:', parsed);
+        setLines(parsed);
+        setFilename(file.name);
+      } catch (error) {
+        console.error('Error parsing SRT:', error);
+      }
     } else if (ext === 'txt') {
       const text = await file.text();
       const textLines = text.split('\n').filter((l) => l.trim());
