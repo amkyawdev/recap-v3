@@ -61,7 +61,7 @@ export default function RewrapMuxer({ videoUrl, srtContent, onComplete }: Rewrap
 
       // Read output
       const data = await ffmpeg.readFile('output.mp4');
-      const outputBlob = new Blob([data], { type: 'video/mp4' });
+      const outputBlob = new Blob([data as Uint8Array], { type: 'video/mp4' });
       const outputUrl = URL.createObjectURL(outputBlob);
 
       onComplete(outputUrl);
