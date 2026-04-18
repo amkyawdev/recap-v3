@@ -41,12 +41,13 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: R
 
       const args: string[] = ['-i', 'input.mp4'];
 
-      // Add SRT if provided - burn subtitles into video to keep original quality
+      // Add SRT if provided - burn subtitles into video
       if (srtContent) {
         const encoder = new TextEncoder();
         await ffmpeg.writeFile('subtitles.srt', encoder.encode(srtContent));
-        // Use subtitles filter to burn into video - keeps original encoding
-        args.push('-vf', 'subtitles=subtitles.srt', '-c:a', 'copy', 'output.mp4');
+        // Use subtitles filter to burn into video
+        // Need to escape the filename for the filter
+        args.push('-vf', 'subtitles=subtitles.srt', '-c:v', 'libx264', '-preset', 'fast', '-crf', '23', '-c:a', 'copy', 'output.mp4');
       } else {
         args.push('-c:v', 'copy', '-c:a', 'copy', 'output.mp4');
       }
