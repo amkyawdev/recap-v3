@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { motion } from 'framer-motion';
+
 import { useAlarm } from '@/components/ui/AlarmToast';
 
 interface MultiFileUploadProps {
@@ -35,7 +35,7 @@ export default function MultiFileUpload({
           onUpload([acceptedFiles[0]]);
           addAlarm('success', 'File uploaded');
         }
-      } catch (error) {
+      } catch {
         addAlarm('error', 'Failed to upload file(s)');
       } finally {
         setUploading(false);
@@ -51,13 +51,11 @@ export default function MultiFileUpload({
   });
 
   return (
-    <motion.div
+    <div
       {...getRootProps()}
       className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition ${
         isDragActive ? 'border-strawberry-500 bg-strawberry-50' : 'border-gray-300 hover:border-strawberry-400'
       }`}
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
     >
       <input {...getInputProps()} />
       {uploading ? (
@@ -86,6 +84,6 @@ export default function MultiFileUpload({
           <p className="text-xs text-gray-400 mt-1">.srt, .txt, .svc, .bin</p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
