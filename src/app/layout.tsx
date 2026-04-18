@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import './globals.css';
 import ServiceWorkerRegistration from '@/components/ui/ServiceWorkerRegistration';
+import { AlarmProvider } from '@/components/ui/AlarmToast';
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -56,18 +57,20 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body>
-        <ServiceWorkerRegistration />
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={pathname}
-            variants={pageVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+        <AlarmProvider>
+          <ServiceWorkerRegistration />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+        </AlarmProvider>
       </body>
     </html>
   );
