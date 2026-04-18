@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { SubtitleLine } from '@/types/subtitle';
 
 interface SubtitleEditorProps {
@@ -10,8 +8,6 @@ interface SubtitleEditorProps {
 }
 
 export default function SubtitleEditor({ lines, onChange }: SubtitleEditorProps) {
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-
   const handleAdd = () => {
     const newLine: SubtitleLine = {
       id: lines.length > 0 ? Math.max(...lines.map((l) => l.id)) + 1 : 1,
@@ -44,45 +40,38 @@ export default function SubtitleEditor({ lines, onChange }: SubtitleEditorProps)
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4">
+    <div>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Subtitle Editor</h3>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+        <h3 className="text-lg font-semibold text-gray-900">Subtitle Editor</h3>
+        <button
           onClick={handleAdd}
-          className="px-3 py-1 bg-strawberry-500 text-white rounded text-sm"
+          className="px-3 py-1.5 bg-strawberry-500 text-white rounded-lg text-sm font-medium hover:bg-strawberry-600"
         >
           + Add Line
-        </motion.button>
+        </button>
       </div>
 
-      <div className="max-h-96 overflow-y-auto">
+      <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 text-left w-12">#</th>
-              <th className="p-2 text-left">Start</th>
-              <th className="p-2 text-left">End</th>
-              <th className="p-2 text-left">Text</th>
-              <th className="p-2 w-16">Actions</th>
+            <tr className="bg-gray-100 text-left">
+              <th className="p-2 w-12">#</th>
+              <th className="p-2">Start</th>
+              <th className="p-2">End</th>
+              <th className="p-2">Text</th>
+              <th className="p-2 w-12"></th>
             </tr>
           </thead>
           <tbody>
             {sortedLines.map((line, index) => (
-              <motion.tr
-                key={line.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="border-b hover:bg-gray-50"
-              >
-                <td className="p-2">{index + 1}</td>
+              <tr key={line.id} className="border-b hover:bg-gray-50">
+                <td className="p-2 text-gray-500">{index + 1}</td>
                 <td className="p-2">
                   <input
                     type="text"
                     value={line.startTime}
                     onChange={(e) => handleUpdate(line.id, 'startTime', e.target.value)}
-                    className="w-full p-1 border rounded text-xs"
+                    className="w-32 p-1.5 border rounded text-xs bg-gray-50"
                     placeholder="00:00:00,000"
                   />
                 </td>
@@ -91,7 +80,7 @@ export default function SubtitleEditor({ lines, onChange }: SubtitleEditorProps)
                     type="text"
                     value={line.endTime}
                     onChange={(e) => handleUpdate(line.id, 'endTime', e.target.value)}
-                    className="w-full p-1 border rounded text-xs"
+                    className="w-32 p-1.5 border rounded text-xs bg-gray-50"
                     placeholder="00:00:00,000"
                   />
                 </td>
@@ -100,19 +89,21 @@ export default function SubtitleEditor({ lines, onChange }: SubtitleEditorProps)
                     type="text"
                     value={line.text}
                     onChange={(e) => handleUpdate(line.id, 'text', e.target.value)}
-                    className="w-full p-1 border rounded"
+                    className="w-full p-1.5 border rounded bg-gray-50"
                     placeholder="Subtitle text..."
                   />
                 </td>
                 <td className="p-2">
                   <button
                     onClick={() => handleDelete(line.id)}
-                    className="text-red-500 hover:text-red-700 text-xs"
+                    className="p-1 text-red-500 hover:text-red-700"
                   >
-                    🗑️
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </button>
                 </td>
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -120,7 +111,7 @@ export default function SubtitleEditor({ lines, onChange }: SubtitleEditorProps)
 
       {lines.length === 0 && (
         <p className="text-center text-gray-500 py-8">
-          No subtitles yet. Click &quot;Add Line&quot; to start.
+          No subtitles yet. Click "Add Line" to start.
         </p>
       )}
     </div>

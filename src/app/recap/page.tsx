@@ -146,48 +146,44 @@ export default function RecapPage() {
         </div>
 
         {/* Buttons Row */}
-        <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-          <div className="flex flex-wrap gap-3">
-            <label className="cursor-pointer px-4 py-2.5 bg-strawberry-500 text-white rounded-lg font-medium hover:bg-strawberry-600 inline-flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded-xl shadow-sm p-3 mb-6">
+          <div className="flex flex-wrap gap-2">
+            <label className="cursor-pointer px-3 py-2 bg-strawberry-500 text-white rounded-lg text-sm font-medium hover:bg-strawberry-600 inline-flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
-              Upload SRT
+              SRT
               <input type="file" accept=".srt,.txt" onChange={handleFileUpload} className="hidden" />
             </label>
             
-            <label className="cursor-pointer px-4 py-2.5 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 inline-flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <label className="cursor-pointer px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 inline-flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
-              Upload Video
+              Video
               <input type="file" accept="video/*" onChange={handleVideoUpload} className="hidden" />
             </label>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={() => setDialogOpen(true)}
-              className="px-4 py-2.5 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 inline-flex items-center gap-2"
+              className="px-3 py-2 bg-purple-500 text-white rounded-lg text-sm font-medium hover:bg-purple-600 inline-flex items-center gap-1.5"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
               </svg>
               Style
-            </motion.button>
+            </button>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={handleExport}
               disabled={lines.length === 0}
-              className="px-4 py-2.5 bg-gray-800 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900 inline-flex items-center gap-2"
+              className="px-3 py-2 bg-gray-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 inline-flex items-center gap-1.5"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
               </svg>
-              Export SRT
-            </motion.button>
+              Export
+            </button>
 
             {videoUrl && lines.length > 0 && (
               <RewrapMuxer
