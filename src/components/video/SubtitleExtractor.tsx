@@ -49,7 +49,7 @@ export default function SubtitleExtractor({ videoUrl, onExtract }: SubtitleExtra
       // Check if subtitle was extracted
       try {
         const data = await ffmpeg.readFile('subtitles.srt');
-        const content = new TextDecoder().decode(data);
+        const content = new TextDecoder().decode(data as Uint8Array);
         onExtract(content);
         addAlarm('success', 'Subtitles extracted successfully');
       } catch {
