@@ -35,7 +35,7 @@ export default function SubtitleDialog({ isOpen, onClose, style, onChange }: Sub
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 z-40"
+            className="fixed inset-0 bg-black/50 z-40 flex items-center justify-center p-4"
             onClick={onClose}
           />
           <motion.div
@@ -44,7 +44,6 @@ export default function SubtitleDialog({ isOpen, onClose, style, onChange }: Sub
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             className="fixed w-full max-w-md max-h-[90vh] p-6 bg-white rounded-2xl shadow-2xl z-50 overflow-y-auto"
-            style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
           >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Subtitle Style</h3>
