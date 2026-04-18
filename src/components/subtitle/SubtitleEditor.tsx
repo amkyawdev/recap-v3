@@ -65,9 +65,8 @@ export default function SubtitleEditor({ lines, onChange }: SubtitleEditorProps)
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-100 text-left">
-              <th className="p-2 w-10">#</th>
-              <th className="p-2 w-24">Start</th>
-              <th className="p-2 w-24">End</th>
+              <th className="p-2 w-16">#</th>
+              <th className="p-2 w-48">Time</th>
               <th className="p-2">Text</th>
               <th className="p-2 w-10"></th>
             </tr>
@@ -77,10 +76,11 @@ export default function SubtitleEditor({ lines, onChange }: SubtitleEditorProps)
               <tr key={line.id} className="border-b hover:bg-gray-50">
                 <td className="p-2 text-gray-400 text-xs">{index + 1}</td>
                 <td className="p-1">
-                  <input type="text" value={line.startTime} onChange={(e) => handleUpdate(line.id, 'startTime', e.target.value)} className="w-full p-1.5 border rounded text-xs font-mono bg-gray-50" />
-                </td>
-                <td className="p-1">
-                  <input type="text" value={line.endTime} onChange={(e) => handleUpdate(line.id, 'endTime', e.target.value)} className="w-full p-1.5 border rounded text-xs font-mono bg-gray-50" />
+                  <div className="flex items-center gap-1">
+                    <input type="text" value={line.startTime} onChange={(e) => handleUpdate(line.id, 'startTime', e.target.value)} className="w-20 p-1.5 border rounded text-xs font-mono bg-gray-50" />
+                    <span className="text-gray-400">→</span>
+                    <input type="text" value={line.endTime} onChange={(e) => handleUpdate(line.id, 'endTime', e.target.value)} className="w-20 p-1.5 border rounded text-xs font-mono bg-gray-50" />
+                  </div>
                 </td>
                 <td className="p-1">
                   <input type="text" value={line.text} onChange={(e) => handleUpdate(line.id, 'text', e.target.value)} className="w-full p-1.5 border rounded bg-gray-50" />
