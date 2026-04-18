@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { motion } from 'framer-motion';
 import { LogoFile } from '@/types/subtitle';
 import { useAlarm } from '@/components/ui/AlarmToast';
 
@@ -50,13 +49,11 @@ export default function LogoUploader({ onUpload }: LogoUploaderProps) {
   });
 
   return (
-    <motion.div
+    <div
       {...getRootProps()}
       className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition ${
         isDragActive ? 'border-strawberry-500 bg-strawberry-50' : 'border-gray-300 hover:border-strawberry-400'
       }`}
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
     >
       <input {...getInputProps()} />
       {uploading ? (
@@ -84,6 +81,6 @@ export default function LogoUploader({ onUpload }: LogoUploaderProps) {
           </p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

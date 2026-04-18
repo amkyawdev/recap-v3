@@ -51,13 +51,11 @@ export default function VideoUploader({ onUpload }: VideoUploaderProps) {
   });
 
   return (
-    <motion.div
+    <div
       {...getRootProps()}
       className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition ${
         isDragActive ? 'border-strawberry-500 bg-strawberry-50' : 'border-gray-300 hover:border-strawberry-400'
       }`}
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
     >
       <input {...getInputProps()} />
       {uploading ? (
@@ -86,6 +84,6 @@ export default function VideoUploader({ onUpload }: VideoUploaderProps) {
           <p className="text-xs text-gray-400 mt-1">.mp4, .mkv, .avi, .mov, .webm</p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
