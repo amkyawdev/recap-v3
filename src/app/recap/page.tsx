@@ -181,8 +181,7 @@ export default function RecapPage() {
 
             <button
               onClick={handleExport}
-              disabled={lines.length === 0 || videoUrl}
-              title={videoUrl ? 'Use Export button to download video with subtitles' : ''}
+              disabled={lines.length === 0 || !!videoUrl}
               className="px-3 py-2 bg-gray-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 inline-flex items-center gap-1.5"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
