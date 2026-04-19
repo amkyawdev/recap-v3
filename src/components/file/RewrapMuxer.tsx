@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { useAlarm } from '@/components/ui/AlarmToast';
@@ -9,13 +9,38 @@ interface RewrapMuxerProps {
   videoUrl: string;
   srtContent?: string;
   onComplete: (outputUrl: string) => void;
+  ffmpegReady?: boolean;
 }
 
-export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: RewrapMuxerProps) {
+export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete, ffmpegReady }: RewrapMuxerProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [ffmpegLoading, setFfmpegLoading] = useState(false);
   const { addAlarm } = useAlarm();
   const ffmpegRef = useRef(new FFmpeg());
+  const [isReady, setIsReady] = useState(false);
+
+  // Pre-load FFmpeg when ffmpegReady is true
+  useEffect(() => {
+    const loadFFmpeg = async () => {
+      if (ffmpegReady && !isReady) {
+        setFfmpegLoading(true);
+        try {
+          const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+          await ffmpegRef.current.load({
+            coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+            wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+          });
+          setIsReady(true);
+        } catch (error) {
+          console.error('FFmpeg pre-load error:', error);
+        } finally {
+          setFfmpegLoading(false);
+        }
+      }
+    };
+    loadFFmpeg();
+  }, [ffmpegReady, isReady]);
 
   const muxVideo = async () => {
     setLoading(true);
@@ -24,11 +49,15 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: R
     const ffmpeg = ffmpegRef.current;
 
     try {
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
+      // If FFmpeg not pre-loaded, load it now
+      if (!isReady) {
+        const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+        await ffmpeg.load({
+          coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+          wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+        });
+        setIsReady(true);
+      }
 
       ffmpeg.on('progress', ({ progress }) => {
         setProgress(Math.round(progress * 100));
@@ -45,9 +74,8 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: R
       if (srtContent) {
         const encoder = new TextEncoder();
         await ffmpeg.writeFile('subtitles.srt', encoder.encode(srtContent));
-        // Use subtitles filter to burn into video
-        // Need to escape the filename for the filter
-        args.push('-vf', 'subtitles=subtitles.srt', '-c:v', 'libx264', '-preset', 'fast', '-crf', '23', '-c:a', 'copy', 'output.mp4');
+        // Use ultrafast preset for faster encoding
+        args.push('-vf', 'subtitles=subtitles.srt', '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '23', '-c:a', 'copy', 'output.mp4');
       } else {
         args.push('-c:v', 'copy', '-c:a', 'copy', 'output.mp4');
       }
@@ -73,14 +101,14 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: R
   return (
     <button
       onClick={muxVideo}
-      disabled={loading || !videoUrl || !srtContent}
+      disabled={loading || !videoUrl || !srtContent || ffmpegLoading}
       className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
     >
       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      {loading ? `${progress}%` : 'Video'}
+      {loading ? `${progress}%` : ffmpegLoading ? 'Loading...' : 'Video'}
     </button>
   );
 }
