@@ -9,10 +9,9 @@ interface RewrapMuxerProps {
   videoUrl: string;
   srtContent?: string;
   onComplete: (outputUrl: string) => void;
-  ffmpegReady?: boolean;
 }
 
-export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete, ffmpegReady }: RewrapMuxerProps) {
+export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete }: RewrapMuxerProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [ffmpegLoading, setFfmpegLoading] = useState(false);
@@ -20,10 +19,10 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete, ffm
   const ffmpegRef = useRef(new FFmpeg());
   const [isReady, setIsReady] = useState(false);
 
-  // Pre-load FFmpeg when ffmpegReady is true
+  // Pre-load FFmpeg when component mounts
   useEffect(() => {
-    const loadFFmpeg = async () => {
-      if (ffmpegReady && !isReady) {
+    const preLoad = async () => {
+      if (!isReady) {
         setFfmpegLoading(true);
         try {
           const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
@@ -39,8 +38,8 @@ export default function RewrapMuxer({ videoUrl, srtContent = '', onComplete, ffm
         }
       }
     };
-    loadFFmpeg();
-  }, [ffmpegReady, isReady]);
+    preLoad();
+  }, [isReady]);
 
   const muxVideo = async () => {
     setLoading(true);

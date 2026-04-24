@@ -1,9 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { toBlobURL } from '@ffmpeg/util';
 
 import MobileButton from '@/components/ui/MobileButton';
 import SideMenu from '@/components/ui/SideMenu';
@@ -32,29 +30,7 @@ export default function RecapPage() {
   const [videoUrl, setVideoUrl] = useState('');
   const [muxedVideoUrl, setMuxedVideoUrl] = useState('');
   const [currentTime, setCurrentTime] = useState(0);
-  const [ffmpegReady, setFfmpegReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Pre-load FFmpeg when video or SRT is loaded
-  useEffect(() => {
-    if ((videoUrl || lines.length > 0) && !ffmpegReady) {
-      const loadFFmpeg = async () => {
-        try {
-          const ffmpeg = new FFmpeg();
-          const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
-          await ffmpeg.load({
-            coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-            wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-          });
-          setFfmpegReady(true);
-          console.log('FFmpeg pre-loaded successfully');
-        } catch (error) {
-          console.error('FFmpeg pre-load error:', error);
-        }
-      };
-      loadFFmpeg();
-    }
-  }, [videoUrl, lines.length, ffmpegReady]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -205,7 +181,7 @@ export default function RecapPage() {
 
             <button
               onClick={handleExport}
-              disabled={lines.length === 0 || !!videoUrl}
+              disabled={lines.length === 0}
               className="px-3 py-2 bg-gray-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 inline-flex items-center gap-1.5"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,9 +193,8 @@ export default function RecapPage() {
             {videoUrl && lines.length > 0 && (
               <RewrapMuxer
                 videoUrl={videoUrl}
-                srtContent={lines.map(l => `${l.id}\n${l.startTime} --> ${l.endTime}\n${l.text}`).join('\n\n')}
+                srtContent={lines.map(l => `${l.id}\n${l.startTime} --> ${l.endTime}\n${l.text}\n`).join('\n')}
                 onComplete={(url) => setMuxedVideoUrl(url)}
-                ffmpegReady={ffmpegReady}
               />
             )}
           </div>
@@ -228,7 +203,6 @@ export default function RecapPage() {
           <div className="flex gap-4 mt-3 text-sm text-gray-500">
             <span>Subtitles: {lines.length} lines</span>
             <span>Video: {videoUrl ? 'Loaded' : 'Not loaded'}</span>
-            {ffmpegReady && <span className="text-green-600">FFmpeg Ready</span>}
           </div>
         </div>
 
